@@ -134,4 +134,10 @@ export default {
   'menu.account.settings': 'Account Settings',
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'Logout',
+  'menu.system': 'System',
+  'menu.system.menu': 'Menu Management',
+  'menu.system.role': 'User Role',
+  'menu.system.user': 'User List',
+  'menu.system.dict': 'Data Dictionary',
+  'menu.system.dept': 'User Department',
 }

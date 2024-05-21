@@ -134,4 +134,10 @@ export default {
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
+  'menu.system': '系统页',
+  'menu.system.menu': '菜单管理',
+  'menu.system.role': '用户角色',
+  'menu.system.user': '用户列表',
+  'menu.system.dict': '数据字典',
+  'menu.system.dept': '用户部门',
 }

@@ -456,4 +456,58 @@ export default [
       },
     ],
   },
+  {
+    path: '/system',
+    redirect: '/system/center',
+    name: 'System',
+    meta: {
+      title: '系统页',
+      icon: 'UserOutlined',
+      locale: 'menu.system',
+    },
+    component: basicRouteMap.RouteView,
+    children: [
+      {
+        path: '/system/menu',
+        name: 'SystemMenu',
+        component: () => import('~/pages/system/menu.vue'),
+        meta: {
+          title: '系统菜单',
+          locale: 'menu.system.menu',
+        },
+      },
+      {
+        path: '/system/role',
+        component: () => import('~/pages/system/role.vue'),
+        meta: {
+          title: '用户角色',
+          locale: 'menu.system.role',
+        },
+      },
+      {
+        path: '/system/user',
+        component: () => import('~/pages/system/user.vue'),
+        meta: {
+          title: '用户列表',
+          locale: 'menu.system.user',
+        },
+      },
+      {
+        path: '/system/dict',
+        component: () => import('~/pages/system/dict.vue'),
+        meta: {
+          title: '数据字典',
+          locale: 'menu.system.dict',
+        },
+      },
+      {
+        path: '/system/dept',
+        component: () => import('~/pages/system/dept.vue'),
+        meta: {
+          title: '用户部门',
+          locale: 'menu.system.dept',
+        },
+      },
+    ],
+  },
 ] as RouteRecordRaw[]

@@ -470,7 +470,7 @@ export default [
       {
         path: '/system/menu',
         name: 'SystemMenu',
-        component: () => import('~/pages/system/menu.vue'),
+        component: () => import('~/pages/system/menu/index.vue'),
         meta: {
           title: '系统菜单',
           locale: 'menu.system.menu',

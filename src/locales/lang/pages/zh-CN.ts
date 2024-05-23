@@ -195,4 +195,10 @@ export default {
   'account.settings.message.desc1': '其他用户的消息将以站内信的形式通知',
   'account.settings.message.desc2': '系统消息将以站内信的形式通知',
   'account.settings.message.desc3': '待办任务将以站内信的形式通知',
+
+  // 系统页
+  'system.menu.title': '菜单管理',
+  'system.menu.add': '新增',
+  'system.menu.edit': '编辑',
+  'system.menu.delete': '删除',
 }

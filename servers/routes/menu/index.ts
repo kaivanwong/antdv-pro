@@ -1,4 +1,4 @@
-const menuData = [
+export const menuData = [
   {
     id: 2,
     parentId: null,

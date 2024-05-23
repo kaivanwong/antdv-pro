@@ -67,8 +67,8 @@ defineExpose({
 <template>
   <a-modal v-model:open="visible" :title="title" @ok="handleOk" @cancel="handleCancel">
     <a-form ref="formRef" :model="formData" class="w-full" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item name="name" label="名" :rules="[{ required: true, message: '请输入名' }]">
-        <a-input v-model:value="formData.name" :maxlength="50" placeholder="请输入名" />
+      <a-form-item name="title" label="菜单名称" :rules="[{ required: true, message: '请输入菜单名称' }]">
+        <a-input v-model:value="formData.title" :maxlength="20" placeholder="请输入菜单名称" />
       </a-form-item>
     </a-form>
   </a-modal>

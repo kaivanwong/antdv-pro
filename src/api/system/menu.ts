@@ -7,6 +7,7 @@ interface SystemMenuModel {
   title: string
   keepAlive: boolean
   locale: string
+  children?: SystemMenuModel[]
 }
 
 type CrudTableParams = Partial<Omit<SystemMenuModel, 'id'>>
@@ -16,7 +17,7 @@ export async function getListApi(params?: CrudTableParams) {
 }
 
 export async function deleteApi(id: string | number) {
-  return useDelete(`/system/menu/${id}`)
+  return useDelete(`/list/${id}`)
 }
 
 export type{

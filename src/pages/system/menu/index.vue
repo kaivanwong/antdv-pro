@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import type MenuModal from './components/menu-modal.vue'
+import MenuModal from './components/menu-modal.vue'
 import type { SystemMenuModel } from '~@/api/system/menu'
 import { deleteApi, getListApi } from '~@/api/system/menu'
 import { useTableQuery } from '~@/composables/table-query'
@@ -33,10 +33,6 @@ const columns = shallowRef([
     dataIndex: 'component',
   },
   {
-    title: '授权标识',
-    dataIndex: 'flag',
-  },
-  {
     title: '操作',
     dataIndex: 'action',
   },
@@ -49,19 +45,25 @@ const { state, query } = useTableQuery({
 const menuModalRef = ref<InstanceType<typeof MenuModal>>()
 
 async function handleDelete(record: SystemMenuModel) {
-  if (!record.id)
-    return message.error('id 不能为空')
+  if (!record.id) {
+    message.error('id 不能为空')
+    return
+  }
+
+  if (record.children && record.children.length > 0) {
+    message.error('请先删除子菜单')
+    return
+  }
+
   try {
     const res = await deleteApi(record.id)
-    if (res.code === 200)
-      await query()
-    message.success('删除成功')
+    if (res.code === 200) {
+      query()
+      message.success('删除成功')
+    }
   }
   catch (e) {
-    console.log(e)
-  }
-  finally {
-    close()
+    console.error(e)
   }
 }
 
@@ -100,11 +102,14 @@ function handleEdit(record: SystemMenuModel) {
           </template>
           <template v-if="scope.column.dataIndex === 'action'">
             <div flex gap-2>
+              <a-button type="link">
+                {{ t('system.menu.flags') }}
+              </a-button>
               <a-button type="link" @click="handleEdit(scope.record as SystemMenuModel)">
                 {{ t('system.menu.edit') }}
               </a-button>
               <a-popconfirm
-                title="确定删除该条数据？" ok-text="确定" cancel-text="取消"
+                :title="t('system.menu.delete-confirm')"
                 @confirm="handleDelete(scope.record as SystemMenuModel)"
               >
                 <a-button type="link">
@@ -117,14 +122,6 @@ function handleEdit(record: SystemMenuModel) {
       </a-table>
     </a-card>
 
-    <CrudTableModal ref="menuModalRef" />
+    <MenuModal ref="menuModalRef" />
   </page-container>
 </template>
-
-<style lang="less" scoped>
-.system-crud-wrapper{
-    .ant-form-item{
-      margin: 0;
-    }
-  }
-</style>

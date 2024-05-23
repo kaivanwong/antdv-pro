@@ -202,6 +202,8 @@ export default {
 
   'system.menu.title': 'Menu Management',
   'system.menu.add': 'Add',
+  'system.menu.flags': 'Permission flags',
   'system.menu.edit': 'Edit',
   'system.menu.delete': 'Delete',
+  'system.menu.delete-confirm': 'Are you sure you want to delete it?',
 }

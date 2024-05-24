@@ -1,19 +1,19 @@
 interface SystemMenuModel {
-  id?: number
+  id: number
   name: string
   parentId?: number
   path: string
+  icon?: string
   component: string
+  sort?: number
   title: string
   keepAlive: boolean
-  locale: string
+  locale?: string
   children?: SystemMenuModel[]
 }
 
-type CrudTableParams = Partial<Omit<SystemMenuModel, 'id'>>
-
-export async function getListApi(params?: CrudTableParams) {
-  return usePost<SystemMenuModel[]>('/system/menu', params)
+export async function getMenuApi() {
+  return usePost('/system/menu', {})
 }
 
 export async function deleteApi(id: string | number) {
@@ -21,6 +21,5 @@ export async function deleteApi(id: string | number) {
 }
 
 export type{
-  CrudTableParams,
   SystemMenuModel,
 }

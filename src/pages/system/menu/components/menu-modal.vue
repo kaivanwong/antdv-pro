@@ -2,26 +2,31 @@
 import type { FormInstance } from 'ant-design-vue'
 import { cloneDeep } from 'lodash'
 import type { SystemMenuModel } from '~@/api/system/menu'
+import { getMenuApi } from '~@/api/system/menu'
 
 const emit = defineEmits(['cancel', 'ok'])
+
+const { t } = useI18n()
 
 const isUpdate = ref(false)
 
 const visible = ref(false)
 
 const title = computed(() => {
-  return isUpdate.value ? '编辑' : '新增'
+  return isUpdate.value ? t('system.menu.model-title-edit') : t('system.menu.model-title-add')
 })
 
 const formRef = ref<FormInstance>()
 
+const menuData = ref<SystemMenuModel[]>([])
+
 const formData = ref<SystemMenuModel>({
+  id: 0,
   name: '',
   path: '',
   component: '',
   title: '',
   keepAlive: false,
-  locale: '',
 })
 
 const labelCol = { style: { width: '100px' } }
@@ -29,14 +34,24 @@ const wrapperCol = { span: 24 }
 
 function open(record?: SystemMenuModel) {
   visible.value = true
-  isUpdate.value = !!record?.id
-  formData.value = cloneDeep(record) ?? {
-    name: '',
-    path: '',
-    component: '',
-    title: '',
-    keepAlive: false,
-    locale: '',
+  getMenuTreeData()
+  if (record) {
+    isUpdate.value = !!record?.id
+    formData.value = cloneDeep(record)
+  }
+  nextTick(() => {
+    formRef.value?.resetFields()
+  })
+}
+
+async function getMenuTreeData() {
+  try {
+    const res = await getMenuApi()
+    if (res.code === 200)
+      menuData.value = res.data?.records || []
+  }
+  catch (e) {
+    console.error(e)
   }
 }
 
@@ -49,8 +64,8 @@ async function handleOk() {
     emit('ok')
     visible.value = false
   }
-  catch (errorInfo) {
-    console.log('Form Validate Failed:', errorInfo)
+  catch (e) {
+    console.error(e)
   }
 }
 
@@ -69,6 +84,30 @@ defineExpose({
     <a-form ref="formRef" :model="formData" class="w-full" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item name="title" label="菜单名称" :rules="[{ required: true, message: '请输入菜单名称' }]">
         <a-input v-model:value="formData.title" :maxlength="20" placeholder="请输入菜单名称" />
+      </a-form-item>
+      <a-form-item name="parentId" label="上级菜单" :rules="[{ required: true, message: '请选择上级菜单' }]">
+        <a-tree-select
+          v-model:value="formData.parentId" :tree-data="menuData" :field-names="{
+            children: 'children',
+            label: 'title',
+            value: 'id',
+          }" placeholder="请选择上级菜单"
+        />
+      </a-form-item>
+      <a-form-item name="path" label="菜单路由" :rules="[{ required: true, message: '请输入菜单路由' }]">
+        <a-input v-model:value="formData.path" :maxlength="20" placeholder="请输入菜单路由称" />
+      </a-form-item>
+      <a-form-item name="component" label="组件路径" :rules="[{ required: true, message: '请输入组件路径' }]">
+        <a-input v-model:value="formData.component" :maxlength="20" placeholder="请输入组件路径" />
+      </a-form-item>
+      <a-form-item name="icon" label="图标">
+        <a-select v-model:value="formData.icon" placeholder="请选择图标" />
+      </a-form-item>
+      <a-form-item name="sort" label="排序">
+        <a-input-number v-model:value="formData.sort" :min="0" :max="999" :precision="0" :maxlength="20" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item name="keepAlive" label="Keep Alive">
+        <a-switch v-model:value="formData.keepAlive" />
       </a-form-item>
     </a-form>
   </a-modal>

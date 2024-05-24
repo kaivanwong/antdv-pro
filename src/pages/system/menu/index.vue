@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { useI18n } from 'vue-i18n'
 import MenuModal from './components/menu-modal.vue'
 import type { SystemMenuModel } from '~@/api/system/menu'
-import { deleteApi, getListApi } from '~@/api/system/menu'
+import { deleteApi, getMenuApi } from '~@/api/system/menu'
 import { useTableQuery } from '~@/composables/table-query'
 import AsyncIcon from '~@/layouts/components/menu/async-icon.vue'
 
@@ -13,45 +12,45 @@ const message = useMessage()
 
 const columns = shallowRef([
   {
-    title: '名称',
+    title: t('system.menu.table-title'),
     dataIndex: 'title',
   },
   {
-    title: '图标',
+    title: t('system.menu.table-icon'),
     dataIndex: 'icon',
   },
   {
-    title: '排序',
+    title: t('system.menu.table-sort'),
     dataIndex: 'sort',
   },
   {
-    title: '路由',
+    title: t('system.menu.table-path'),
     dataIndex: 'path',
   },
   {
-    title: '组件',
+    title: t('system.menu.table-component'),
     dataIndex: 'component',
   },
   {
-    title: '操作',
+    title: t('system.menu.table-action'),
     dataIndex: 'action',
   },
 ])
 
 const { state, query } = useTableQuery({
-  queryApi: getListApi,
+  queryApi: getMenuApi,
 })
 
 const menuModalRef = ref<InstanceType<typeof MenuModal>>()
 
 async function handleDelete(record: SystemMenuModel) {
   if (!record.id) {
-    message.error('id 不能为空')
+    message.error(t('system.menu.delete-id-required'))
     return
   }
 
   if (record.children && record.children.length > 0) {
-    message.error('请先删除子菜单')
+    message.error(t('system.menu.delete-has-children'))
     return
   }
 
@@ -59,7 +58,7 @@ async function handleDelete(record: SystemMenuModel) {
     const res = await deleteApi(record.id)
     if (res.code === 200) {
       query()
-      message.success('删除成功')
+      message.success(t('system.menu.delete-success'))
     }
   }
   catch (e) {
@@ -95,7 +94,7 @@ function handleEdit(record: SystemMenuModel) {
       >
         <template #bodyCell="scope">
           <template v-if="scope.column.dataIndex === 'title'">
-            {{ scope.record.locale ? t(scope?.record.locale) : scope.record.title }}
+            {{ scope.record.title }}
           </template>
           <template v-if="scope.column.dataIndex === 'icon'">
             <AsyncIcon :icon="scope.record.icon" />

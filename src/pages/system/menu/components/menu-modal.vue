@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'ant-design-vue'
 import { cloneDeep } from 'lodash'
+import * as icons from '@ant-design/icons-vue'
 import type { SystemMenuModel } from '~@/api/system/menu'
 import { getMenuApi } from '~@/api/system/menu'
+import AsyncIcon from '~@/layouts/components/menu/async-icon.vue'
 
 const emit = defineEmits(['cancel', 'ok'])
+
+const iconList = computed(() => Object.keys(icons).filter(key => /^[A-Z][a-zA-Z]*$/.test(key)))
 
 const { t } = useI18n()
 
@@ -101,7 +105,18 @@ defineExpose({
         <a-input v-model:value="formData.component" :maxlength="20" placeholder="请输入组件路径" />
       </a-form-item>
       <a-form-item name="icon" label="图标">
-        <a-select v-model:value="formData.icon" placeholder="请选择图标" />
+        <a-select
+          v-model:value="formData.icon"
+          allow-clear
+          show-search
+          placeholder="select one country"
+          option-label-prop="children"
+        >
+          <a-select-option v-for="item in iconList" :key="item" :value="item" :label="item">
+            <AsyncIcon class="mr-2" :icon="item" />
+            <span>{{ item }}</span>
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item name="sort" label="排序">
         <a-input-number v-model:value="formData.sort" :min="0" :max="999" :precision="0" :maxlength="20" placeholder="请输入" />

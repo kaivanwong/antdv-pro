@@ -43,9 +43,6 @@ function open(record?: SystemMenuModel) {
     isUpdate.value = !!record?.id
     formData.value = cloneDeep(record)
   }
-  nextTick(() => {
-    formRef.value?.resetFields()
-  })
 }
 
 async function getMenuTreeData() {
@@ -84,32 +81,32 @@ defineExpose({
 </script>
 
 <template>
-  <a-modal v-model:open="visible" :title="title" @ok="handleOk" @cancel="handleCancel">
+  <a-modal v-model:open="visible" destroy-on-close :title="title" @ok="handleOk" @cancel="handleCancel">
     <a-form ref="formRef" :model="formData" class="w-full" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item name="title" label="菜单名称" :rules="[{ required: true, message: '请输入菜单名称' }]">
-        <a-input v-model:value="formData.title" :maxlength="20" placeholder="请输入菜单名称" />
+      <a-form-item name="title" :label="t('system.menu.table-title')" :rules="[{ required: true }]">
+        <a-input v-model:value="formData.title" :placeholder="t('system.menu.placeholder-title')" :maxlength="20" />
       </a-form-item>
-      <a-form-item name="parentId" label="上级菜单" :rules="[{ required: true, message: '请选择上级菜单' }]">
+      <a-form-item name="parentId" :label="t('system.menu.table-parent-title')" :rules="[{ required: true }]">
         <a-tree-select
-          v-model:value="formData.parentId" :tree-data="menuData" :field-names="{
+          v-model:value="formData.parentId"
+          :placeholder="t('system.menu.placeholder-parent-title')" :tree-data="menuData" :field-names="{
             children: 'children',
             label: 'title',
             value: 'id',
-          }" placeholder="请选择上级菜单"
+          }"
         />
       </a-form-item>
-      <a-form-item name="path" label="菜单路由" :rules="[{ required: true, message: '请输入菜单路由' }]">
-        <a-input v-model:value="formData.path" :maxlength="20" placeholder="请输入菜单路由称" />
+      <a-form-item name="path" :label="t('system.menu.table-path')" :rules="[{ required: true }]">
+        <a-input v-model:value="formData.path" :placeholder="t('system.menu.placeholder-path')" :maxlength="20" p />
       </a-form-item>
-      <a-form-item name="component" label="组件路径" :rules="[{ required: true, message: '请输入组件路径' }]">
-        <a-input v-model:value="formData.component" :maxlength="20" placeholder="请输入组件路径" />
+      <a-form-item name="component" :label="t('system.menu.table-component')" :rules="[{ required: true }]">
+        <a-input v-model:value="formData.component" :placeholder="t('system.menu.placeholder-component')" :maxlength="20" />
       </a-form-item>
-      <a-form-item name="icon" label="图标">
+      <a-form-item name="icon" :label="t('system.menu.table-icon')">
         <a-select
           v-model:value="formData.icon"
           allow-clear
-          show-search
-          placeholder="select one country"
+          show-search :placeholder="t('system.menu.placeholder-icon')"
           option-label-prop="children"
         >
           <a-select-option v-for="item in iconList" :key="item" :value="item" :label="item">
@@ -118,11 +115,14 @@ defineExpose({
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item name="sort" label="排序">
-        <a-input-number v-model:value="formData.sort" :min="0" :max="999" :precision="0" :maxlength="20" placeholder="请输入" />
+      <a-form-item name="locale" :label="t('system.menu.table-locale')">
+        <a-input v-model:value="formData.locale" :placeholder="t('system.menu.placeholder-locale')" />
       </a-form-item>
-      <a-form-item name="keepAlive" label="Keep Alive">
-        <a-switch v-model:value="formData.keepAlive" />
+      <a-form-item name="sort" :label="t('system.menu.table-sort')">
+        <a-input-number v-model:value="formData.sort" style="width: 120px;" :min="0" :max="999" :precision="0" :maxlength="20" :placeholder="t('system.menu.placeholder-sort')" />
+      </a-form-item>
+      <a-form-item name="keepAlive" :label="t('system.menu.table-keep-alive')">
+        <a-switch v-model:checked="formData.keepAlive" />
       </a-form-item>
     </a-form>
   </a-modal>

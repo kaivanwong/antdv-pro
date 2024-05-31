@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { FormInstance } from 'ant-design-vue'
 import { cloneDeep } from 'lodash'
 import * as icons from '@ant-design/icons-vue'
 import type { SystemMenuModel } from '~@/api/system/menu'
@@ -20,7 +19,7 @@ const title = computed(() => {
   return isUpdate.value ? t('system.menu.model-title-edit') : t('system.menu.model-title-add')
 })
 
-const formRef = ref<FormInstance>()
+const formRef = ref()
 
 const menuData = ref<SystemMenuModel[]>([])
 
@@ -34,15 +33,23 @@ const formData = ref<SystemMenuModel>({
 })
 
 const labelCol = { style: { width: '100px' } }
+
 const wrapperCol = { span: 24 }
 
-function open(record?: SystemMenuModel) {
+const isAddChild = ref(false)
+
+function open(record?: SystemMenuModel, _isAddChild = false) {
   visible.value = true
+  isAddChild.value = _isAddChild
   getMenuTreeData()
-  if (record) {
-    isUpdate.value = !!record?.id
-    formData.value = cloneDeep(record)
-  }
+  nextTick(() => {
+    if (record && !_isAddChild) {
+      isUpdate.value = !!record?.id
+      formData.value = cloneDeep(record)
+    }
+    if (_isAddChild)
+      formData.value.parentId = record?.id
+  })
 }
 
 async function getMenuTreeData() {
@@ -58,7 +65,7 @@ async function getMenuTreeData() {
 
 async function handleOk() {
   try {
-    await formRef.value?.validate()
+    await formRef.value.validate()
 
     // 新增或者编辑接口...
 
@@ -71,7 +78,7 @@ async function handleOk() {
 }
 
 function handleCancel() {
-  formRef.value?.resetFields()
+  formRef.value.resetFields()
   emit('cancel')
 }
 
@@ -83,30 +90,31 @@ defineExpose({
 <template>
   <a-modal v-model:open="visible" destroy-on-close :title="title" @ok="handleOk" @cancel="handleCancel">
     <a-form ref="formRef" :model="formData" class="w-full" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item name="title" :label="t('system.menu.table-title')" :rules="[{ required: true }]">
+      <a-form-item name="title" :label="t('system.menu.table-title')" required>
         <a-input v-model:value="formData.title" :placeholder="t('system.menu.placeholder-title')" :maxlength="20" />
       </a-form-item>
-      <a-form-item name="parentId" :label="t('system.menu.table-parent-title')" :rules="[{ required: true }]">
+      <a-form-item name="parentId" :label="t('system.menu.table-parent-title')">
         <a-tree-select
-          v-model:value="formData.parentId"
-          :placeholder="t('system.menu.placeholder-parent-title')" :tree-data="menuData" :field-names="{
+          v-model:value="formData.parentId" :placeholder="t('system.menu.placeholder-parent-title')"
+          :tree-data="menuData" :field-names="{
             children: 'children',
             label: 'title',
             value: 'id',
           }"
         />
       </a-form-item>
-      <a-form-item name="path" :label="t('system.menu.table-path')" :rules="[{ required: true }]">
+      <a-form-item name="path" :label="t('system.menu.table-path')" required>
         <a-input v-model:value="formData.path" :placeholder="t('system.menu.placeholder-path')" :maxlength="20" p />
       </a-form-item>
-      <a-form-item name="component" :label="t('system.menu.table-component')" :rules="[{ required: true }]">
-        <a-input v-model:value="formData.component" :placeholder="t('system.menu.placeholder-component')" :maxlength="20" />
+      <a-form-item name="component" :label="t('system.menu.table-component')" required>
+        <a-input
+          v-model:value="formData.component" :placeholder="t('system.menu.placeholder-component')"
+          :maxlength="20"
+        />
       </a-form-item>
       <a-form-item name="icon" :label="t('system.menu.table-icon')">
         <a-select
-          v-model:value="formData.icon"
-          allow-clear
-          show-search :placeholder="t('system.menu.placeholder-icon')"
+          v-model:value="formData.icon" allow-clear show-search :placeholder="t('system.menu.placeholder-icon')"
           option-label-prop="children"
         >
           <a-select-option v-for="item in iconList" :key="item" :value="item" :label="item">
@@ -119,7 +127,10 @@ defineExpose({
         <a-input v-model:value="formData.locale" :placeholder="t('system.menu.placeholder-locale')" />
       </a-form-item>
       <a-form-item name="sort" :label="t('system.menu.table-sort')">
-        <a-input-number v-model:value="formData.sort" style="width: 120px;" :min="0" :max="999" :precision="0" :maxlength="20" :placeholder="t('system.menu.placeholder-sort')" />
+        <a-input-number
+          v-model:value="formData.sort" style="width: 120px;" :min="0" :max="999" :precision="0"
+          :maxlength="20" :placeholder="t('system.menu.placeholder-sort')"
+        />
       </a-form-item>
       <a-form-item name="keepAlive" :label="t('system.menu.table-keep-alive')">
         <a-switch v-model:checked="formData.keepAlive" />

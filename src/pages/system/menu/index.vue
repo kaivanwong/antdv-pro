@@ -70,8 +70,8 @@ function handleAdd() {
   menuModalRef.value?.open()
 }
 
-function handleEdit(record: SystemMenuModel) {
-  menuModalRef.value?.open(record)
+function handleEdit(record: SystemMenuModel, isAddChild = false) {
+  menuModalRef.value?.open(record, isAddChild)
 }
 </script>
 
@@ -101,8 +101,8 @@ function handleEdit(record: SystemMenuModel) {
           </template>
           <template v-if="scope.column.dataIndex === 'action'">
             <div flex gap-2>
-              <a-button type="link">
-                {{ t('system.menu.flags') }}
+              <a-button type="link" @click="handleEdit(scope.record as SystemMenuModel, true)">
+                {{ t('system.menu.add-child') }}
               </a-button>
               <a-button type="link" @click="handleEdit(scope.record as SystemMenuModel)">
                 {{ t('system.menu.edit') }}

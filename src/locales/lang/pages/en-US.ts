@@ -202,7 +202,7 @@ export default {
 
   'system.menu.title': 'Menu Management',
   'system.menu.add': 'Add',
-  'system.menu.flags': 'Permission flags',
+  'system.menu.add-child': 'Add Child Menu',
   'system.menu.edit': 'Edit',
   'system.menu.delete': 'Delete',
   'system.menu.delete-confirm': 'Are you sure you want to delete it?',
@@ -224,6 +224,7 @@ export default {
   'system.menu.placeholder-parent-title': 'Please select the parent menu',
   'system.menu.placeholder-path': 'Please enter the menu route',
   'system.menu.placeholder-icon': 'Please select the icon',
+  'system.menu.placeholder-component': 'Please enter the component path',
   'system.menu.placeholder-sort': 'Please enter',
   'system.menu.placeholder-locale': 'Please enter the locale flag',
 

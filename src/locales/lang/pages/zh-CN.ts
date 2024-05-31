@@ -199,7 +199,8 @@ export default {
   // 系统页
   'system.menu.title': '菜单管理',
   'system.menu.add': '新增',
-  'system.menu.add-child': '新增子菜单',
+  'system.menu.add-child': '新增',
+  'system.menu.role': '权限',
   'system.menu.edit': '编辑',
   'system.menu.delete': '删除',
   'system.menu.delete-confirm': '确定删除吗？',

@@ -73,6 +73,10 @@ function handleAdd() {
 function handleEdit(record: SystemMenuModel, isAddChild = false) {
   menuModalRef.value?.open(record, isAddChild)
 }
+
+function handleRole(record: SystemMenuModel) {
+  console.log(record)
+}
 </script>
 
 <template>
@@ -107,11 +111,14 @@ function handleEdit(record: SystemMenuModel, isAddChild = false) {
               <a-button type="link" @click="handleEdit(scope.record as SystemMenuModel)">
                 {{ t('system.menu.edit') }}
               </a-button>
+              <a-button type="link" @click="handleRole(scope.record as SystemMenuModel)">
+                {{ t('system.menu.role') }}
+              </a-button>
               <a-popconfirm
                 :title="t('system.menu.delete-confirm')"
                 @confirm="handleDelete(scope.record as SystemMenuModel)"
               >
-                <a-button type="link">
+                <a-button v-if="scope.record.children.length === 0" type="link">
                   {{ t('system.menu.delete') }}
                 </a-button>
               </a-popconfirm>
